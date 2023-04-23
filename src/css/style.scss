@@ -1,0 +1,51 @@
+
+//Colors
+$clr-accent-300: hsl(180, 100%, 60%);
+$clr-accent-400: hsl(180, 60%, 50%);
+
+$clr-neutral-100: hsl(0, 0%, 99%);
+$clr-neutral-200: hsl(0, 0%, 80%);
+$clr-neutral-300: hsl(0, 0%, 66%);
+$clr-neutral-400: hsl(0, 0%, 50%);
+$clr-neutral-500: hsl(0, 0%, 33%);
+$clr-neutral-600: hsl(0, 0%, 16%);
+$clr-neutral-700: hsl(0, 0%, 11%);
+$clr-neutral-900: hsl(0, 0%, 0%);
+
+// Font Family
+$ff-primary: Roboto, Arial, sans-serif;
+
+// Font Weight
+$fw-reg: 400;
+$fw-bold: 700;
+
+// Font Sizing
+$fs-200: clamp(0.63rem, calc(0.82rem + -0.16vw), 0.79rem);
+$fs-300: clamp(0.75rem, calc(0.9rem + 0.04vw), 0.95rem);
+$fs-400: clamp(0.9rem, calc(0.98rem + 0.13vw), 1.13rem);
+$fs-500: clamp(1.13rem, calc(1.05rem + 0.37vw), 1.5rem);
+$fs-600: clamp(1.27rem, calc(1.12rem + 0.73vw), 2rem);
+$fs-700: clamp(1.42rem, calc(1.18rem + 1.24vw), 2.66rem);
+$fs-800: clamp(1.6rem, calc(1.21rem + 1.95vw), 3.55rem);
+$fs-900: clamp(1.8rem, calc(1.22rem + 2.93vw), 4.74rem);
+
+// Spacing
+$spc-100: clamp(0.25rem, calc(0.19rem + 0.31vw), 0.56rem);
+$spc-200: clamp(0.5rem, calc(0.43rem + 0.38vw), 0.88rem);
+$spc-300: clamp(0.75rem, calc(0.68rem + 0.38vw), 1.13rem);
+$spc-400: clamp(1rem, calc(0.86rem + 0.69vw), 1.69rem);
+$spc-500: clamp(1.5rem, calc(1.35rem + 0.75vw), 2.25rem);
+$spc-600: clamp(2rem, calc(1.73rem + 1.38vw), 3.38rem);
+$spc-700: clamp(3rem, calc(2.7rem + 1.5vw), 4.5rem);
+$spc-800: clamp(4rem, calc(3.45rem + 2.75vw), 6.75rem);
+
+$app-padding: clamp(0.5rem, calc(0.1rem + 1.75vw), 2.25rem);
+
+// Misc
+$border-radius: 8px;
+$shadow: 4px 4px 8px rgba(0, 0, 0, 0.5);
+
+body {
+  font-family: $ff-primary;
+  font-size: $fs-400;
+}
