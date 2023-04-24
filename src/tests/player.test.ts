@@ -1,4 +1,9 @@
-import { humanPlayer, computerPlayer } from '../ts/player.ts';
+import { createPlayer } from '../ts/player.ts';
+
+const humanPlayer = createPlayer('human');
+const computerPlayer = createPlayer('comp');
+humanPlayer.enemy = computerPlayer;
+computerPlayer.enemy = humanPlayer;
 
 test('Player can place ship', () => {
   humanPlayer.placeShip(4, [0, 0], true);

@@ -1,6 +1,7 @@
 import { createGameBoard, GameBoard } from './gameBoard.ts';
 
-interface Player {
+export interface Player {
+  name: string;
   gameBoard: GameBoard;
   turn: boolean;
   enemy: Player;
@@ -8,8 +9,9 @@ interface Player {
   takeTurn: (position: number[]) => void;
 }
 
-const createPlayer = (): Player => {
+export const createPlayer = (n: string): Player => {
   const player: Player = {
+    name: n,
     gameBoard: createGameBoard(),
     turn: false,
     enemy: null as unknown as Player,
@@ -26,15 +28,3 @@ const createPlayer = (): Player => {
 
   return player;
 };
-
-export const humanPlayer = createPlayer();
-export const computerPlayer = createPlayer();
-humanPlayer.enemy = computerPlayer;
-computerPlayer.enemy = humanPlayer;
-
-(function determineStartingPlayer() {
-  const coinFlip = Math.round(Math.random());
-
-  if (coinFlip === 0) humanPlayer.turn = true;
-  else computerPlayer.turn = true;
-})();
