@@ -8,7 +8,24 @@ test('New gameboard', () => {
 test('Gameboard has ships', () => {
   const board = createGameBoard();
   board.addShip(4, [0, 0], false);
-  expect(board.ships.length > 0).toBeTruthy();
+  expect(board.shipsRemaining() > 0).toBeTruthy();
+});
+
+test('Gameboard has no ships', () => {
+  const board = createGameBoard();
+  expect(board.shipsRemaining() === 0).toBeTruthy();
+});
+
+test('Gameboard all ships sunk', () => {
+  const board = createGameBoard();
+  board.addShip(4, [0, 0], true);
+
+  board.receiveAttack(0, 0);
+  board.receiveAttack(0, 1);
+  board.receiveAttack(0, 2);
+  board.receiveAttack(0, 3);
+
+  expect(board.shipsRemaining() === 0).toBeTruthy();
 });
 
 test('Out of bound placement', () => {

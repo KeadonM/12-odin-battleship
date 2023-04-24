@@ -1,7 +1,22 @@
 import { Ship, createShip } from './ship';
 
-export const createGameBoard = () => {
-  const gameBoard = {
+export interface GameBoard {
+  squares: (string | Ship)[][];
+  ships: Ship[];
+  addShip: (length: number, position: number[], dirVertical: boolean) => void;
+  placeShip: (ship: Ship) => void;
+  ensureValidPlacement: (
+    length: number,
+    position: number[],
+    dirVertical: boolean
+  ) => boolean;
+  checkConflictAroundSquare: (currentSquare: number[]) => boolean;
+  receiveAttack: (x: number, y: number) => void;
+  shipsRemaining: () => number;
+}
+
+export const createGameBoard = (): GameBoard => {
+  const gameBoard: GameBoard = {
     squares: [
       ['', '', '', '', '', '', '', '', '', ''],
       ['', '', '', '', '', '', '', '', '', ''],
@@ -24,7 +39,6 @@ export const createGameBoard = () => {
 
       const ship = createShip(length, position, dirVertical);
       this.ships.push(ship);
-      console.log(this.ships);
       this.placeShip(ship);
     },
 
@@ -83,7 +97,6 @@ export const createGameBoard = () => {
 
     receiveAttack(x: number, y: number) {
       const square = this.squares[y][x];
-      console.log(square);
 
       if (typeof square === 'string') {
         if (square === 'm' || square === 'h') return;
@@ -91,11 +104,22 @@ export const createGameBoard = () => {
       }
 
       if (typeof square === 'object') {
-        if (square.sunk === false) square.hit();
+        if (square.sunk === false) {
+          this.squares[y][x] = 'h';
+          square.hit();
+        }
       }
     },
 
-    findAttackedShip() {},
+    shipsRemaining() {
+      let shipCount = this.ships.length;
+
+      this.ships.forEach((ship) => {
+        if (ship.sunk === true) shipCount -= 1;
+      });
+
+      return shipCount;
+    },
   };
 
   return gameBoard;

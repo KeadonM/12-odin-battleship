@@ -4,8 +4,8 @@ export interface Ship {
   dirVertical: boolean;
   hits: number;
   sunk: boolean;
-  hit: (this: Ship) => void; // Add type annotation for 'this'
-  isSunk: (this: Ship) => void; // Add type annotation for 'this'
+  hit: (this: Ship) => void;
+  isSunk: (this: Ship) => void;
 }
 
 export const createShip = (l: number, p: number[], d: boolean): Ship => {
