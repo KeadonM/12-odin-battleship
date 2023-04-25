@@ -54,7 +54,7 @@ body {
   gap: $spc-400;
 }
 
-.game-board-wrapper {
+.squares-wrapper {
   display: flex;
   flex-wrap: wrap;
 
@@ -62,10 +62,30 @@ body {
   aspect-ratio: 1 / 1;
 
   .square {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: $clr-neutral-100;
     background-color: $clr-neutral-500;
     border: 2px solid $clr-accent-300;
 
     width: 50px;
     aspect-ratio: 1 / 1;
+
+    &:hover:not(.hit):not(.miss) {
+      filter: brightness(1.2);
+    }
+
+    &.hit {
+      background-color: red;
+    }
+
+    &.miss {
+      background-color: white;
+    }
+
+    &.sunk {
+      background-color: blue;
+    }
   }
 }

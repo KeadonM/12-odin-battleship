@@ -8,18 +8,19 @@ export const setUpGameUi = (player1: Player, player2: Player) => {
   const player1GameBoard = document.createElement('div');
   app.appendChild(player1GameBoard);
   player1GameBoard.className = `game-board ${player1.name}`;
-  player1GameBoard.appendChild(createGameBoardComponent(player1.gameBoard));
+  player1GameBoard.appendChild(createGameBoardComponent(player1));
 
   const player2GameBoard = document.createElement('div');
   app.appendChild(player2GameBoard);
   player2GameBoard.className = `game-board ${player2.name}`;
-  player2GameBoard.appendChild(createGameBoardComponent(player2.gameBoard));
+  player2GameBoard.appendChild(createGameBoardComponent(player2));
 };
 
 export const updateGameBoard = (player: Player) => {
-  const board = document.querySelector(`.gameBoard .${player.name}`);
+  console.log(`.game-board .${player.name}`);
+  const board = document.querySelector(`.game-board.${player.name}`);
   if (!board) return console.error('Board element not found');
 
   board.innerHTML = '';
-  board.appendChild(createGameBoardComponent(player.gameBoard));
+  board.appendChild(createGameBoardComponent(player));
 };
