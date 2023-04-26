@@ -1,14 +1,20 @@
 import { Player } from './player';
 import { createGameBoardComponent } from './uiComponents/gameBoardComponent';
+import { createShips } from './uiComponents/draggableShipComponent';
 
 export const setUpGameUi = (player1: Player, player2: Player) => {
   const app = document.getElementById('app');
   if (!app) return console.error('App element not found');
 
+  const player1Wrapper = document.createElement('div');
+  app.appendChild(player1Wrapper);
+
   const player1GameBoard = document.createElement('div');
-  app.appendChild(player1GameBoard);
+  player1Wrapper.appendChild(player1GameBoard);
   player1GameBoard.className = `game-board ${player1.name}`;
   player1GameBoard.appendChild(createGameBoardComponent(player1));
+
+  player1Wrapper.appendChild(createShips());
 
   const player2GameBoard = document.createElement('div');
   app.appendChild(player2GameBoard);

@@ -1,3 +1,17 @@
+export const shipTypes: [
+  [number, string],
+  [number, string],
+  [number, string],
+  [number, string],
+  [number, string]
+] = [
+  [2, 'Destroyer'],
+  [3, 'Submarine'],
+  [3, 'Cruiser'],
+  [4, 'Battleship'],
+  [5, 'Carrier'],
+];
+
 export interface Ship {
   length: number;
   position: number[];

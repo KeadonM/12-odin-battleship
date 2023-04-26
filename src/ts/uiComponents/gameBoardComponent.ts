@@ -7,8 +7,6 @@ export const createGameBoardComponent = (player: Player) => {
   const wrapper = document.createElement('div');
   wrapper.className = `squares-wrapper`;
 
-  console.log(board);
-
   for (let y = 0; y < board.squares.length; y++) {
     for (let x = 0; x < board.squares.length; x++) {
       const squareElement = document.createElement('div');
@@ -19,6 +17,7 @@ export const createGameBoardComponent = (player: Player) => {
       squareElement.addEventListener('click', () =>
         squareOnClick(squareElement, player, x, y)
       );
+      if (player.name != 'Comp') makeDropTarget(squareElement, x, y, player);
 
       const square = board.squares[y][x];
       if (typeof square === 'object') squareElement.textContent = `${x},${y}`;
@@ -66,4 +65,45 @@ function squareOnClick(
       updateGameBoard(player);
       break;
   }
+}
+
+function makeDropTarget(
+  element: HTMLDivElement,
+  x: number,
+  y: number,
+  player: Player
+) {
+  element.addEventListener('drop', (e) => {
+    dropped(x, y, player, e);
+    element.classList.toggle('drop-hover');
+  });
+
+  element.addEventListener('dragenter', () => {
+    element.classList.toggle('drop-hover');
+  });
+
+  element.addEventListener('dragleave', () => {
+    element.classList.toggle('drop-hover');
+  });
+
+  element.addEventListener('dragover', (e) => {
+    e.preventDefault();
+  });
+
+  // element.addEventListener("dragleave", dragLeave);
+}
+
+function dropped(x: number, y: number, player: Player, event: DragEvent) {
+  if (event.dataTransfer != null) {
+    const length = parseInt(event.dataTransfer.getData('length'));
+    const dir = event.dataTransfer.getData('dir') === 'true' ? true : false;
+    const result = player.placeShip(length, [x, y], dir);
+    if (result) {
+      const name = event.dataTransfer.getData('name');
+      console.log(name);
+      const ship = document.querySelector(`#${name}`);
+      document.querySelector('.ships-wrapper')?.removeChild(ship);
+      updateGameBoard(player);
+    }
+  } else console.warn('No data transfer');
 }

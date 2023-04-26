@@ -1,11 +1,16 @@
 import { createGameBoard, GameBoard } from './gameBoard.ts';
+import { shipTypes } from './ship.ts';
 
 export interface Player {
   name: string;
   gameBoard: GameBoard;
   turn: boolean;
   enemy: Player;
-  placeShip: (length: number, position: number[], dirVertical: boolean) => void;
+  placeShip: (
+    length: number,
+    position: number[],
+    dirVertical: boolean
+  ) => boolean;
   takeTurn: (x: number, y: number) => string | boolean;
 }
 
@@ -17,7 +22,7 @@ export const createPlayer = (n: string): Player => {
     enemy: null as unknown as Player,
 
     placeShip(length: number, position: number[], dirVertical: boolean) {
-      this.gameBoard.addShip(length, position, dirVertical);
+      return this.gameBoard.addShip(length, position, dirVertical);
     },
 
     takeTurn(x: number, y: number) {
@@ -35,6 +40,20 @@ export const createPlayer = (n: string): Player => {
 
 export const createComputerPlayer = () => {
   const player = createPlayer('Comp');
+
+  (function addShips() {
+    for (let i = 0; i < 5; i++) {
+      let hasPlaced: boolean;
+      let length = shipTypes[i][0];
+      do {
+        const dirVertical = Math.round(Math.random()) === 0 ? false : true;
+        const x = Math.round(Math.random() * 10);
+        const y = Math.round(Math.random() * 10);
+
+        hasPlaced = player.gameBoard.addShip(length, [x, y], dirVertical);
+      } while (!hasPlaced);
+    }
+  })();
 
   setInterval(() => {
     compLoop();
@@ -147,7 +166,7 @@ export const createComputerPlayer = () => {
     let endX: number[] = [];
     let endY: number[] = [];
 
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < 5; i++) {
       if (x + i <= 9)
         if (
           squares[y][x + i] === 'h' &&

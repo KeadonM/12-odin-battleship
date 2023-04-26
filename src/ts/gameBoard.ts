@@ -1,4 +1,3 @@
-import { splitVendorChunk } from 'vite';
 import { Ship, createShip } from './ship';
 
 export interface GameBoard {

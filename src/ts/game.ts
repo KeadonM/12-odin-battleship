@@ -24,14 +24,12 @@ function setUpPlayers() {
   humanPlayer.enemy = computerPlayer;
   computerPlayer.enemy = humanPlayer;
 
-  // const coinFlip = Math.round(Math.random());
-  // if (coinFlip === 0) humanPlayer.turn = true;
-  computerPlayer.turn = true;
+  const coinFlip = Math.round(Math.random());
+  if (coinFlip === 0) humanPlayer.turn = true;
+  else computerPlayer.turn = true;
 
   let currPlayer = humanPlayer.turn === true ? humanPlayer : computerPlayer;
 
-  addPresetShips(humanPlayer);
-  addPresetShips(computerPlayer);
   setUpGameUi(humanPlayer, computerPlayer);
 
   return [humanPlayer, computerPlayer, currPlayer];
