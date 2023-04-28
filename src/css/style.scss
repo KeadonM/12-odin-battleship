@@ -78,6 +78,10 @@ body {
       background-color: $clr-neutral-700;
     }
 
+    &.drop-hover.invalid {
+      background-color: red;
+    }
+
     &.hit {
       background-color: red;
     }
@@ -95,21 +99,25 @@ body {
 .ships-wrapper {
   display: flex;
   gap: $spc-100;
+}
 
-  .ship {
-    display: flex;
-    flex-direction: column;
-    div {
-      width: 50px;
-      aspect-ratio: 1 / 1;
-      color: $clr-neutral-100;
-      background-color: $clr-neutral-500;
-      border: 2px solid red;
-    }
+.ship {
+  display: flex;
+  flex-direction: column;
+  div {
+    width: 50px;
+    aspect-ratio: 1 / 1;
+    color: $clr-neutral-100;
+    background-color: $clr-neutral-500;
+    border: 2px solid red;
+  }
 
-    &.horizontal {
-      flex-direction: row;
-      max-height: 50px;
-    }
+  &.horizontal {
+    flex-direction: row;
+    max-height: 50px;
+  }
+
+  &.mock {
+    position: fixed;
   }
 }

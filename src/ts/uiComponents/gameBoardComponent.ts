@@ -1,5 +1,6 @@
 import { Player } from '../player';
 import { updateGameBoard } from '../domController';
+import { currentShip } from './draggableShipComponent';
 
 export const createGameBoardComponent = (player: Player) => {
   const board = player.gameBoard;
@@ -75,35 +76,76 @@ function makeDropTarget(
 ) {
   element.addEventListener('drop', (e) => {
     dropped(x, y, player, e);
-    element.classList.toggle('drop-hover');
-  });
-
-  element.addEventListener('dragenter', () => {
-    element.classList.toggle('drop-hover');
+    element.classList.remove('drop-hover');
   });
 
   element.addEventListener('dragleave', () => {
-    element.classList.toggle('drop-hover');
+    for (let i = 0; i < currentShip.length; i++) {
+      const next =
+        currentShip.dir === false ? { x: x + i, y } : { x, y: y + i };
+
+      const square = document.querySelector(
+        `.${player.name}[data-xy="${next.x},${next.y}"]`
+      );
+
+      square?.classList.remove('drop-hover');
+      square?.classList.remove('invalid');
+    }
   });
 
   element.addEventListener('dragover', (e) => {
     e.preventDefault();
-  });
 
-  // element.addEventListener("dragleave", dragLeave);
+    const isValidPlacement = player.gameBoard.checkValidPlacement(
+      currentShip.length,
+      [x, y],
+      currentShip.dir
+    );
+
+    for (let i = 0; i < currentShip.length; i++) {
+      const next =
+        currentShip.dir === false ? { x: x + i, y } : { x, y: y + i };
+
+      const square = document.querySelector(
+        `.${player.name}[data-xy="${next.x},${next.y}"]`
+      );
+
+      setTimeout(() => {
+        square?.classList.add('drop-hover');
+      }, 0);
+
+      if (!isValidPlacement) square?.classList.add('invalid');
+    }
+  });
 }
 
 function dropped(x: number, y: number, player: Player, event: DragEvent) {
   if (event.dataTransfer != null) {
-    const length = parseInt(event.dataTransfer.getData('length'));
-    const dir = event.dataTransfer.getData('dir') === 'true' ? true : false;
-    const result = player.placeShip(length, [x, y], dir);
-    if (result) {
+    const placementResult = player.placeShip(
+      currentShip.length,
+      [x, y],
+      currentShip.dir
+    );
+    if (placementResult) {
       const name = event.dataTransfer.getData('name');
       console.log(name);
       const ship = document.querySelector(`#${name}`);
       document.querySelector('.ships-wrapper')?.removeChild(ship);
-      updateGameBoard(player);
     }
+    updateGameBoard(player);
   } else console.warn('No data transfer');
+}
+
+export function addHover() {
+  for (let i = 0; i < currentShip.length; i++) {
+    const next = currentShip.dir === false ? { x: x + i, y } : { x, y: y + i };
+
+    const square = document.querySelector(
+      `.${player.name}[data-xy="${next.x},${next.y}"]`
+    );
+
+    setTimeout(() => {
+      square?.classList.add('drop-hover');
+    }, 0);
+  }
 }

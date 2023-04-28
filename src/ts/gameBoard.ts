@@ -9,6 +9,11 @@ export interface GameBoard {
     dirVertical: boolean
   ) => boolean;
   placeShip: (ship: Ship) => void;
+  checkValidPlacement: (
+    length: number,
+    position: number[],
+    dirVertical: boolean
+  ) => boolean;
   checkBounds: (
     length: number,
     position: number[],
@@ -43,22 +48,7 @@ export const createGameBoard = (): GameBoard => {
     ships: [] as Ship[],
 
     addShip(length: number, position: number[], dirVertical: boolean) {
-      if (
-        !this.checkAreaAroundShip(
-          length,
-          position,
-          dirVertical,
-          this.checkConflictAroundSquare.bind(this)
-        )
-      ) {
-        console.warn('Invalid placement conflict');
-        return false;
-      }
-
-      if (!this.checkBounds(length, position, dirVertical)) {
-        console.warn('Invalid placement out of bounds');
-        return false;
-      }
+      if (!this.checkValidPlacement(length, position, dirVertical)) return;
 
       const ship = createShip(length, position, dirVertical);
       this.ships.push(ship);
@@ -76,6 +66,31 @@ export const createGameBoard = (): GameBoard => {
         if (ship.dirVertical === false) x += 1;
         else y += 1;
       }
+    },
+
+    checkValidPlacement(
+      length: number,
+      position: number[],
+      dirVertical: boolean
+    ) {
+      if (
+        !this.checkAreaAroundShip(
+          length,
+          position,
+          dirVertical,
+          this.checkConflictAroundSquare.bind(this)
+        )
+      ) {
+        console.warn('Invalid placement conflict');
+        return false;
+      }
+
+      if (!this.checkBounds(length, position, dirVertical)) {
+        console.warn('Invalid placement out of bounds');
+        return false;
+      }
+
+      return true;
     },
 
     checkBounds(length: number, position: number[], dirVertical: boolean) {
