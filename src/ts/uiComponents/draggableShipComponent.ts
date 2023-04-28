@@ -3,15 +3,15 @@ const mockShip = document.querySelector('.mock.ship');
 let dirToggleable = true;
 
 interface Ship {
-  dir: boolean | null;
-  length: number | null;
-  name: string | null;
+  dir: boolean;
+  length: number;
+  name: string;
 }
 
 export let currentShip: Ship = {
-  dir: null,
-  length: null,
-  name: null,
+  dir: false,
+  length: 0,
+  name: 'default',
 };
 
 export const createShips = () => {
@@ -49,17 +49,12 @@ export const createShips = () => {
 };
 
 function onPickUp(shipType: [number, string], dir: boolean, event: DragEvent) {
-  if (event.dataTransfer != null) {
-    event.dataTransfer.setData('length', shipType[0].toString());
-    event.dataTransfer.setData('name', shipType[1]);
-    event.dataTransfer.setData('dir', `${dir}`);
-  }
-
   currentShip.dir = dir;
   currentShip.length = shipType[0];
   currentShip.name = shipType[1];
 
-  event.dataTransfer.setDragImage(mockShip, 20, 20);
+  if (event.dataTransfer !== null && mockShip !== null)
+    event.dataTransfer.setDragImage(mockShip, 20, 20);
 }
 
 function switchDirection(event: DragEvent) {

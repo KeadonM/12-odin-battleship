@@ -18,10 +18,11 @@ export const createGameBoardComponent = (player: Player) => {
       squareElement.addEventListener('click', () =>
         squareOnClick(squareElement, player, x, y)
       );
-      if (player.name != 'Comp') makeDropTarget(squareElement, x, y, player);
+      if (player.name !== 'Comp') makeDropTarget(squareElement, x, y, player);
 
       const square = board.squares[y][x];
-      if (typeof square === 'object') squareElement.textContent = `${x},${y}`;
+      if (typeof square === 'object' && player.name !== 'Comp')
+        squareElement.textContent = `${x},${y}`;
 
       switch (square) {
         case 'm':
@@ -127,25 +128,17 @@ function dropped(x: number, y: number, player: Player, event: DragEvent) {
       currentShip.dir
     );
     if (placementResult) {
-      const name = event.dataTransfer.getData('name');
-      console.log(name);
-      const ship = document.querySelector(`#${name}`);
-      document.querySelector('.ships-wrapper')?.removeChild(ship);
+      const ship = document.querySelector(`#${currentShip.name}`);
+      if (ship !== null)
+        document.querySelector('.ships-wrapper')?.removeChild(ship);
+
+      if (player.gameBoard.shipsRemaining() === 5) {
+        const startButton = document.querySelector(
+          '.start-button'
+        ) as HTMLButtonElement;
+        startButton.disabled = false;
+      }
     }
     updateGameBoard(player);
   } else console.warn('No data transfer');
-}
-
-export function addHover() {
-  for (let i = 0; i < currentShip.length; i++) {
-    const next = currentShip.dir === false ? { x: x + i, y } : { x, y: y + i };
-
-    const square = document.querySelector(
-      `.${player.name}[data-xy="${next.x},${next.y}"]`
-    );
-
-    setTimeout(() => {
-      square?.classList.add('drop-hover');
-    }, 0);
-  }
 }

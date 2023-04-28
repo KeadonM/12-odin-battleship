@@ -47,29 +47,37 @@ export const createComputerPlayer = () => {
       let length = shipTypes[i][0];
       do {
         const dirVertical = Math.round(Math.random()) === 0 ? false : true;
-        const x = Math.round(Math.random() * 10);
-        const y = Math.round(Math.random() * 10);
+        const x = Math.round(Math.random() * 9);
+        const y = Math.round(Math.random() * 9);
 
         hasPlaced = player.gameBoard.addShip(length, [x, y], dirVertical);
       } while (!hasPlaced);
     }
   })();
 
+  let pauseLoop = false;
+
   setInterval(() => {
-    compLoop();
-    console.warn('comp loop');
-  }, 50);
+    if (!pauseLoop) {
+      compLoop();
+      console.warn('comp loop');
+    }
+  }, 1);
 
   function compLoop() {
     if (!player.turn) return;
 
     const [x, y] = chooseMove();
+    if (player.enemy.gameBoard.checkValidAttack(x, y) === false) return;
+    pauseLoop = true;
 
-    const square = document.querySelector(
-      `.${player.enemy.name}[data-xy="${x},${y}"]`
-    );
-
-    if (square !== null) (square as HTMLElement).click();
+    setTimeout(() => {
+      const square = document.querySelector(
+        `.${player.enemy.name}[data-xy="${x},${y}"]`
+      );
+      if (square !== null) (square as HTMLElement).click();
+      pauseLoop = false;
+    }, 1000);
   }
 
   function chooseMove() {

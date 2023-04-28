@@ -27,6 +27,7 @@ export interface GameBoard {
   ) => boolean;
   checkConflictAroundSquare: (currentSquare: number[]) => boolean;
   receiveAttack: (x: number, y: number) => boolean | string;
+  checkValidAttack: (x: number, y: number) => boolean;
   revealAreaAfterSunk: (currentSquare: number[]) => boolean;
   shipsRemaining: () => number;
 }
@@ -48,7 +49,8 @@ export const createGameBoard = (): GameBoard => {
     ships: [] as Ship[],
 
     addShip(length: number, position: number[], dirVertical: boolean) {
-      if (!this.checkValidPlacement(length, position, dirVertical)) return;
+      if (!this.checkValidPlacement(length, position, dirVertical))
+        return false;
 
       const ship = createShip(length, position, dirVertical);
       this.ships.push(ship);
@@ -149,7 +151,7 @@ export const createGameBoard = (): GameBoard => {
       const square = this.squares[y][x];
 
       if (typeof square === 'string') {
-        if (square === 'm' || square === 'h' || square === 'sunk') return false;
+        if (!this.checkValidAttack(x, y)) return false;
         else {
           this.squares[y][x] = 'm';
           return 'm';
@@ -174,6 +176,13 @@ export const createGameBoard = (): GameBoard => {
       }
 
       return false;
+    },
+
+    checkValidAttack(x: number, y: number) {
+      console.log({ x, y });
+      const square = this.squares[y][x];
+      if (square === 'm' || square === 'h' || square === 'sunk') return false;
+      return true;
     },
 
     revealAreaAfterSunk(currentSquare: number[]) {

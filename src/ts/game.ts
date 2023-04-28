@@ -1,22 +1,9 @@
 import { createPlayer, createComputerPlayer, Player } from './player';
-import { setUpGameUi, updateGameBoard } from './domController.ts';
+import { setUpGameUi, highlightCurrentPlayer } from './domController.ts';
 
-let [humanPlayer, computerPlayer, currPlayer] = setUpPlayers();
-
-let gameover = false;
-setInterval(() => {
-  if (!gameover) gameLoop();
-}, 30);
-
-export function gameLoop() {
-  if (currPlayer.turn === true) return;
-
-  if (currPlayer === humanPlayer) currPlayer = computerPlayer;
-  else currPlayer = humanPlayer;
-  currPlayer.turn = true;
-
-  gameover = checkGameOver(currPlayer);
-}
+let [humanPlayer, computerPlayer] = setUpPlayers();
+let currPlayer: Player | null = null;
+let gameover = true;
 
 function setUpPlayers() {
   const humanPlayer = createPlayer('Human');
@@ -24,25 +11,39 @@ function setUpPlayers() {
   humanPlayer.enemy = computerPlayer;
   computerPlayer.enemy = humanPlayer;
 
+  setUpGameUi(humanPlayer, computerPlayer);
+
+  return [humanPlayer, computerPlayer];
+}
+
+export function startGame() {
+  console.log('game started');
+
   const coinFlip = Math.round(Math.random());
   if (coinFlip === 0) humanPlayer.turn = true;
   else computerPlayer.turn = true;
 
-  let currPlayer = humanPlayer.turn === true ? humanPlayer : computerPlayer;
+  currPlayer = humanPlayer.turn === true ? humanPlayer : computerPlayer;
 
-  setUpGameUi(humanPlayer, computerPlayer);
+  console.log('First move: ' + currPlayer.name);
 
-  return [humanPlayer, computerPlayer, currPlayer];
+  highlightCurrentPlayer(currPlayer);
+
+  gameover = false;
 }
 
-function addPresetShips(player: Player) {
-  player.gameBoard.addShip(4, [0, 9], false);
-  player.gameBoard.addShip(4, [9, 5], true);
+export function gameLoop() {
+  setInterval(() => {
+    if (currPlayer?.turn === true || gameover) return;
 
-  player.gameBoard.addShip(4, [0, 0], false);
+    if (currPlayer === humanPlayer) currPlayer = computerPlayer;
+    else currPlayer = humanPlayer;
+    currPlayer.turn = true;
 
-  player.gameBoard.addShip(4, [6, 0], false);
-  player.gameBoard.addShip(1, [5, 5], false);
+    highlightCurrentPlayer(currPlayer);
+
+    gameover = checkGameOver(currPlayer);
+  }, 30);
 }
 
 function checkGameOver(player: Player) {

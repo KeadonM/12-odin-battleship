@@ -54,6 +54,10 @@ body {
   gap: $spc-400;
 }
 
+.game-board.active {
+  filter: brightness(1.2);
+}
+
 .squares-wrapper {
   display: flex;
   flex-wrap: wrap;
@@ -118,6 +122,7 @@ body {
   }
 
   &.mock {
-    position: fixed;
+    position: absolute;
+    left: -500px;
   }
 }
