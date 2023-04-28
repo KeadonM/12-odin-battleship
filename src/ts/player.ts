@@ -1,6 +1,8 @@
 import { createGameBoard, GameBoard } from './gameBoard.ts';
 import { shipTypes } from './ship.ts';
 
+let compInterval: NodeJS.Timer;
+
 export interface Player {
   name: string;
   gameBoard: GameBoard;
@@ -41,6 +43,8 @@ export const createPlayer = (n: string): Player => {
 export const createComputerPlayer = () => {
   const player = createPlayer('Comp');
 
+  clearInterval(compInterval);
+
   (function addShips() {
     for (let i = 0; i < 5; i++) {
       let hasPlaced: boolean;
@@ -57,7 +61,7 @@ export const createComputerPlayer = () => {
 
   let pauseLoop = false;
 
-  setInterval(() => {
+  compInterval = setInterval(() => {
     if (!pauseLoop) {
       compLoop();
       console.warn('comp loop');

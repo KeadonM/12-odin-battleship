@@ -1,5 +1,5 @@
 import { Player } from './player';
-import { startGame } from './game';
+import { startGame, resetGame } from './game';
 import { createGameBoardComponent } from './uiComponents/gameBoardComponent';
 import { createShips } from './uiComponents/draggableShipComponent';
 
@@ -7,26 +7,18 @@ export const setUpGameUi = (player1: Player, player2: Player) => {
   const app = document.getElementById('app');
   if (!app) return console.error('App element not found');
 
-  const player1UI = document.createElement('div');
-  player1UI.className = `${player1.name}-UI`;
-  app.appendChild(player1UI);
-
-  const player1GameBoard = document.createElement('div');
-  player1GameBoard.className = `game-board ${player1.name}`;
-  player1GameBoard.appendChild(createGameBoardComponent(player1));
-  player1UI.appendChild(player1GameBoard);
-  player1UI.appendChild(createShips());
-
-  const player2UI = document.createElement('div');
-  player2UI.className = `${player2.name}-UI`;
-  app.appendChild(player2UI);
-
-  const player2GameBoard = document.createElement('div');
-  player2GameBoard.className = `game-board ${player2.name}`;
-  player2GameBoard.appendChild(createGameBoardComponent(player2));
-  app.appendChild(player2GameBoard);
-
   app.appendChild(buildControls());
+
+  const gameWrapper = document.createElement('div');
+  gameWrapper.className = 'game';
+  app.appendChild(gameWrapper);
+
+  const player1Ui = buildPlayerUi(player1);
+  player1Ui.appendChild(createShips());
+  gameWrapper.appendChild(player1Ui);
+
+  const player2Ui = buildPlayerUi(player2);
+  gameWrapper.appendChild(player2Ui);
 };
 
 function buildControls() {
@@ -40,7 +32,34 @@ function buildControls() {
   startButton.onclick = startGame;
   wrapper.appendChild(startButton);
 
+  const resetButton = document.createElement('button');
+  resetButton.className = 'reset-button';
+  resetButton.textContent = 'Reset';
+  resetButton.onclick = () => {
+    const app = document.getElementById('app');
+    app!.innerHTML = '';
+    resetGame();
+  };
+  wrapper.appendChild(resetButton);
+
   return wrapper;
+}
+
+function buildPlayerUi(player: Player) {
+  const playerUi = document.createElement('div');
+  playerUi.className = `${player.name} game-ui`;
+
+  const name = document.createElement('p');
+  name.className = 'player-name';
+  name.textContent = player.name;
+  playerUi.appendChild(name);
+
+  const gameBoard = document.createElement('div');
+  gameBoard.className = `game-board ${player.name}`;
+  gameBoard.appendChild(createGameBoardComponent(player));
+  playerUi.appendChild(gameBoard);
+
+  return playerUi;
 }
 
 export const updateGameBoard = (player: Player) => {
@@ -53,13 +72,21 @@ export const updateGameBoard = (player: Player) => {
 };
 
 export const highlightCurrentPlayer = (player: Player) => {
-  const gameBoardElements = document.querySelectorAll('.game-board');
+  const gameBoardElements = document.querySelectorAll('.game-ui');
 
   gameBoardElements.forEach((element) => {
     element.classList.remove('active');
   });
 
-  const currPlayerBoard = document.querySelector(`.game-board.${player.name}`);
+  const currPlayerBoard = document.querySelector(`.${player.name}.game-ui`);
 
   currPlayerBoard?.classList.add('active');
+};
+
+export const displayWinner = (loser: Player, winner: Player) => {
+  const loserUi = document.querySelector(`.game-ui.${loser.name}`);
+  const winnerUi = document.querySelector(`.game-ui.${winner.name}`);
+
+  loserUi!.firstChild!.textContent = loser.name + ' Loser';
+  winnerUi!.firstChild!.textContent = winner.name + ' Winner';
 };

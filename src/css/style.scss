@@ -43,27 +43,75 @@ $app-padding: clamp(0.5rem, calc(0.1rem + 1.75vw), 2.25rem);
 // Misc
 $border-radius: 8px;
 $shadow: 4px 4px 8px rgba(0, 0, 0, 0.5);
+$square-size: clamp(2rem, 0.25rem + 3vw, 4rem);
 
 body {
+  display: flex;
+  flex-direction: column;
+
   font-family: $ff-primary;
   font-size: $fs-400;
+  background-color: $clr-neutral-200;
 }
 
-#app {
+/***---HEADER---***/
+
+header {
+  position: relative;
+  z-index: 1;
+  background-color: $clr-neutral-400;
+}
+
+.header-wrapper {
+  height: 6vh;
   display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spc-300);
+  box-shadow: 6px 0px 12px rgba(0, 0, 0, 0.4);
+}
+
+/***---APP---***/
+
+#app {
+  display: grid;
+  gap: $spc-600;
+  margin-block: $spc-600;
+}
+
+/***---CONTROLS---***/
+
+.controls-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+/***---GAME---***/
+
+.game {
+  display: flex;
+  justify-content: center;
   gap: $spc-400;
 }
 
-.game-board.active {
-  filter: brightness(1.2);
+.game-ui.active {
+  .player-name {
+    background-color: yellow;
+  }
+}
+
+.game-ui {
+  width: calc($square-size * 10);
 }
 
 .squares-wrapper {
   display: flex;
   flex-wrap: wrap;
-
-  width: 500px;
   aspect-ratio: 1 / 1;
+
+  outline: 2px solid $clr-accent-300;
+  border-radius: 8px;
+  overflow: hidden;
 
   .square {
     display: flex;
@@ -71,15 +119,20 @@ body {
     align-items: center;
     color: $clr-neutral-100;
     background-color: $clr-neutral-500;
-    border: 2px solid $clr-accent-300;
+    outline: 2px solid $clr-accent-400;
+    user-select: none;
 
-    width: 50px;
+    width: $square-size;
     aspect-ratio: 1 / 1;
 
-    &.drop-hover,
-    &:hover:not(.hit):not(.miss) {
-      filter: brightness(1.2);
+    &.drop-hover {
       background-color: $clr-neutral-700;
+    }
+
+    &:hover:not(.hit):not(.miss):not(.sunk) {
+      // filter: brightness(1.2);
+
+      background-color: $clr-neutral-400;
     }
 
     &.drop-hover.invalid {
@@ -100,29 +153,69 @@ body {
   }
 }
 
+/***---DRAGGABLE SHIPS---***/
+
 .ships-wrapper {
   display: flex;
+  flex-wrap: wrap;
   gap: $spc-100;
+  margin-top: $spc-200;
 }
 
 .ship {
   display: flex;
   flex-direction: column;
+  height: min-content;
+
+  outline: 2px solid red;
+  border-radius: 8px;
+  overflow: hidden;
+
   div {
-    width: 50px;
+    width: $square-size;
     aspect-ratio: 1 / 1;
     color: $clr-neutral-100;
     background-color: $clr-neutral-500;
-    border: 2px solid red;
+    outline: 2px solid red;
   }
 
   &.horizontal {
     flex-direction: row;
-    max-height: 50px;
+    max-height: $square-size;
   }
 
   &.mock {
+    border: 2px solid red;
     position: absolute;
     left: -500px;
   }
+}
+
+/***---FOOTER---***/
+
+footer {
+  min-height: 5vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: auto;
+}
+
+#copyright {
+  font-size: 1.24rem;
+  font-weight: 700;
+  text-decoration-line: none;
+  letter-spacing: 0.5px;
+  color: var(--clr-neutral-300);
+}
+
+.fa-github {
+  font-size: 1.38rem;
+  transition: transform 0.4s ease-in-out;
+}
+
+.fa-github:hover {
+  transform: rotate(360deg) scale(1.2);
+
+  border: 24px 24px 24px 24px solid red;
 }

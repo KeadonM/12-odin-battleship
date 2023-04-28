@@ -54,7 +54,7 @@ function onPickUp(shipType: [number, string], dir: boolean, event: DragEvent) {
   currentShip.name = shipType[1];
 
   if (event.dataTransfer !== null && mockShip !== null)
-    event.dataTransfer.setDragImage(mockShip, 20, 20);
+    event.dataTransfer.setDragImage(mockShip, 25, 25);
 }
 
 function switchDirection(event: DragEvent) {

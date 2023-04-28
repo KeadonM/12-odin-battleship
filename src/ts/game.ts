@@ -1,9 +1,14 @@
 import { createPlayer, createComputerPlayer, Player } from './player';
-import { setUpGameUi, highlightCurrentPlayer } from './domController.ts';
+import {
+  setUpGameUi,
+  highlightCurrentPlayer,
+  displayWinner,
+} from './domController.ts';
 
 let [humanPlayer, computerPlayer] = setUpPlayers();
 let currPlayer: Player | null = null;
 let gameover = true;
+let interval: NodeJS.Timer;
 
 function setUpPlayers() {
   const humanPlayer = createPlayer('Human');
@@ -17,23 +22,28 @@ function setUpPlayers() {
 }
 
 export function startGame() {
-  console.log('game started');
-
   const coinFlip = Math.round(Math.random());
   if (coinFlip === 0) humanPlayer.turn = true;
   else computerPlayer.turn = true;
 
   currPlayer = humanPlayer.turn === true ? humanPlayer : computerPlayer;
 
-  console.log('First move: ' + currPlayer.name);
-
   highlightCurrentPlayer(currPlayer);
 
   gameover = false;
 }
 
+export function resetGame() {
+  [humanPlayer, computerPlayer] = setUpPlayers();
+  currPlayer = null;
+  gameover = true;
+
+  gameLoop();
+  clearInterval(interval);
+}
+
 export function gameLoop() {
-  setInterval(() => {
+  interval = setInterval(() => {
     if (currPlayer?.turn === true || gameover) return;
 
     if (currPlayer === humanPlayer) currPlayer = computerPlayer;
@@ -48,7 +58,7 @@ export function gameLoop() {
 
 function checkGameOver(player: Player) {
   if (player.gameBoard.shipsRemaining() === 0) {
-    console.log('Game Over');
+    displayWinner(player, player.enemy);
     return true;
   }
   return false;
