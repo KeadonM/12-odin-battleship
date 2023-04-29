@@ -8,6 +8,7 @@ const outDir = resolve(__dirname, 'dist');
 
 export default defineConfig({
   root,
+  base: '/12-odin-battleship',
   test: {
     globals: true,
   },
