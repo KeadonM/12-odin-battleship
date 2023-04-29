@@ -18,13 +18,13 @@ export const createShips = () => {
   const wrapper = document.createElement('div');
   wrapper.className = `ships-wrapper`;
 
-  for (let i = 0; i < 5; i++) {
+  for (let i = 4; i >= 0; i--) {
     const ship = document.createElement('div');
     wrapper.appendChild(ship);
-    ship.className = 'ship';
+    ship.className = 'ship horizontal';
     ship.id = shipTypes[i][1];
     ship.setAttribute('draggable', 'true');
-    let dirVertical = true;
+    let dirVertical = false;
 
     ship.addEventListener('click', () => {
       dirVertical = !dirVertical;

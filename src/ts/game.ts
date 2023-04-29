@@ -8,7 +8,7 @@ import {
 let [humanPlayer, computerPlayer] = setUpPlayers();
 let currPlayer: Player | null = null;
 let gameover = true;
-let interval: NodeJS.Timer;
+let gameInterval: NodeJS.Timer;
 
 function setUpPlayers() {
   const humanPlayer = createPlayer('Human');
@@ -39,11 +39,11 @@ export function resetGame() {
   gameover = true;
 
   gameLoop();
-  clearInterval(interval);
+  clearInterval(gameInterval);
 }
 
 export function gameLoop() {
-  interval = setInterval(() => {
+  gameInterval = setInterval(() => {
     if (currPlayer?.turn === true || gameover) return;
 
     if (currPlayer === humanPlayer) currPlayer = computerPlayer;

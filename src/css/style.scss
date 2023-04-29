@@ -1,15 +1,26 @@
 //Colors
-$clr-accent-300: hsl(180, 100%, 60%);
-$clr-accent-400: hsl(180, 60%, 50%);
-
-$clr-neutral-100: hsl(0, 0%, 99%);
+$clr-neutral-100: hsl(0, 0%, 90%);
 $clr-neutral-200: hsl(0, 0%, 80%);
 $clr-neutral-300: hsl(0, 0%, 66%);
-$clr-neutral-400: hsl(0, 0%, 50%);
+$clr-neutral-400: hsl(0, 0%, 57%);
 $clr-neutral-500: hsl(0, 0%, 33%);
 $clr-neutral-600: hsl(0, 0%, 16%);
 $clr-neutral-700: hsl(0, 0%, 11%);
 $clr-neutral-900: hsl(0, 0%, 0%);
+
+$clr-accent-200: hsl(226, 15%, 70%);
+$clr-accent-300: hsl(226, 15%, 60%);
+$clr-accent-400: hsl(225, 15%, 55%);
+
+$clr-ship-200: hsl(0, 80%, 65%);
+$clr-ship-400: hsl(0, 75%, 60%);
+
+$clr-valid-400: hsl(138, 75%, 60%);
+$clr-invalid-400: hsl(0, 100%, 60%);
+
+$clr-miss: hsl(0, 0%, 100%);
+$clr-hit: hsl(0, 97%, 77%);
+$clr-sunk: hsl(226, 15%, 70%);
 
 // Font Family
 $ff-primary: Roboto, Arial, sans-serif;
@@ -44,6 +55,7 @@ $app-padding: clamp(0.5rem, calc(0.1rem + 1.75vw), 2.25rem);
 $border-radius: 8px;
 $shadow: 4px 4px 8px rgba(0, 0, 0, 0.5);
 $square-size: clamp(2rem, 0.25rem + 3vw, 4rem);
+$break-point: 45em;
 
 body {
   display: flex;
@@ -71,6 +83,14 @@ header {
   box-shadow: 6px 0px 12px rgba(0, 0, 0, 0.4);
 }
 
+.logo-container {
+  padding-left: $spc-400;
+  font-size: $fs-700;
+  color: white;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
 /***---APP---***/
 
 #app {
@@ -84,6 +104,22 @@ header {
 .controls-wrapper {
   display: flex;
   justify-content: center;
+  gap: $spc-400;
+
+  button {
+    border: none;
+    border-radius: $border-radius;
+    padding-block: calc($spc-100 * 0.5);
+    background-color: $clr-accent-300;
+    color: white;
+    font-size: $fs-500;
+    letter-spacing: 1px;
+    width: 7.5rem;
+
+    &:disabled {
+      background-color: $clr-accent-200;
+    }
+  }
 }
 
 /***---GAME---***/
@@ -92,16 +128,39 @@ header {
   display: flex;
   justify-content: center;
   gap: $spc-400;
-}
 
-.game-ui.active {
-  .player-name {
-    background-color: yellow;
+  @media (max-width: $break-point) {
+    flex-direction: column;
+    align-items: center;
   }
 }
 
 .game-ui {
   width: calc($square-size * 10);
+  .player-name {
+    color: white;
+    font-size: $fs-600;
+    margin: $spc-200;
+    padding-block: $spc-100;
+    padding-inline: $spc-300;
+    width: min-content;
+    border-radius: $border-radius;
+  }
+}
+
+.game-ui.active {
+  .player-name {
+    background-color: darken($clr-valid-400, 0);
+  }
+}
+
+.game-ui.Comp:not(.active) {
+  .square:hover:not(.hit):not(.miss):not(.sunk):not(.placed-ship) {
+    &::before {
+      background-color: $clr-valid-400;
+      border-color: darken($clr-valid-400, 7.5);
+    }
+  }
 }
 
 .squares-wrapper {
@@ -109,46 +168,69 @@ header {
   flex-wrap: wrap;
   aspect-ratio: 1 / 1;
 
-  outline: 2px solid $clr-accent-300;
-  border-radius: 8px;
   overflow: hidden;
+  border-radius: 8px;
+  outline: 2px solid $clr-accent-400;
 
   .square {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    color: $clr-neutral-100;
-    background-color: $clr-neutral-500;
-    outline: 2px solid $clr-accent-400;
     user-select: none;
+
+    color: $clr-neutral-100;
+    background-color: $clr-neutral-100;
+    outline: 2px solid $clr-accent-200;
 
     width: $square-size;
     aspect-ratio: 1 / 1;
 
-    &.drop-hover {
-      background-color: $clr-neutral-700;
+    &::before {
+      content: '';
+      position: relative;
+      top: calc(50% - 1px);
+      left: calc(50% - 1px);
+      transform: translate(-50%, -50%);
+
+      width: 40%;
+      height: 40%;
+      border-radius: 99px;
+      border: 2px solid;
     }
 
-    &:hover:not(.hit):not(.miss):not(.sunk) {
-      // filter: brightness(1.2);
-
-      background-color: $clr-neutral-400;
+    &.drop-hover {
+      background-color: $clr-valid-400;
     }
 
     &.drop-hover.invalid {
-      background-color: red;
+      background-color: $clr-invalid-400;
+    }
+
+    &.placed-ship {
+      background-color: $clr-accent-200;
     }
 
     &.hit {
-      background-color: red;
+      background-color: $clr-accent-200;
+
+      &::before {
+        background-color: $clr-hit;
+        border-color: darken($clr-hit, 7.5);
+      }
     }
 
     &.miss {
-      background-color: white;
+      &::before {
+        background-color: $clr-miss;
+        border-color: darken($clr-miss, 20);
+      }
     }
 
     &.sunk {
-      background-color: blue;
+      background-color: $clr-sunk;
+
+      &::before {
+        background-color: $clr-hit;
+        border-color: darken($clr-hit, 7.5);
+      }
     }
   }
 }
@@ -159,7 +241,7 @@ header {
   display: flex;
   flex-wrap: wrap;
   gap: $spc-100;
-  margin-top: $spc-200;
+  margin-top: $spc-300;
 }
 
 .ship {
@@ -167,7 +249,7 @@ header {
   flex-direction: column;
   height: min-content;
 
-  outline: 2px solid red;
+  outline: 2px solid $clr-accent-400;
   border-radius: 8px;
   overflow: hidden;
 
@@ -175,8 +257,8 @@ header {
     width: $square-size;
     aspect-ratio: 1 / 1;
     color: $clr-neutral-100;
-    background-color: $clr-neutral-500;
-    outline: 2px solid red;
+    background-color: $clr-accent-200;
+    outline: 2px solid $clr-accent-300;
   }
 
   &.horizontal {
@@ -185,10 +267,17 @@ header {
   }
 
   &.mock {
-    border: 2px solid red;
+    border: 2px solid $clr-accent-400;
     position: absolute;
     left: -500px;
   }
+}
+
+.instructions {
+  margin-top: $spc-300;
+  color: white;
+  font-size: $fs-500;
+  text-align: center;
 }
 
 /***---FOOTER---***/
@@ -206,7 +295,7 @@ footer {
   font-weight: 700;
   text-decoration-line: none;
   letter-spacing: 0.5px;
-  color: var(--clr-neutral-300);
+  color: $clr-accent-400;
 }
 
 .fa-github {

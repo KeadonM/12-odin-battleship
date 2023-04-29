@@ -21,8 +21,10 @@ export const createGameBoardComponent = (player: Player) => {
       if (player.name !== 'Comp') makeDropTarget(squareElement, x, y, player);
 
       const square = board.squares[y][x];
-      if (typeof square === 'object' && player.name !== 'Comp')
-        squareElement.textContent = `${x},${y}`;
+      if (typeof square === 'object' && player.name !== 'Comp') {
+        // squareElement.textContent = `${x},${y}`;
+        squareElement.classList.add('placed-ship');
+      }
 
       switch (square) {
         case 'm':
@@ -133,6 +135,9 @@ function dropped(x: number, y: number, player: Player, event: DragEvent) {
         document.querySelector('.ships-wrapper')?.removeChild(ship);
 
       if (player.gameBoard.shipsRemaining() === 5) {
+        const instructionsElement = document.querySelector('.instructions');
+        instructionsElement!.textContent = '';
+
         const startButton = document.querySelector(
           '.start-button'
         ) as HTMLButtonElement;

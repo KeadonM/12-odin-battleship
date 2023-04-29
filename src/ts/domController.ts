@@ -15,6 +15,12 @@ export const setUpGameUi = (player1: Player, player2: Player) => {
 
   const player1Ui = buildPlayerUi(player1);
   player1Ui.appendChild(createShips());
+
+  const instructions = document.createElement('div');
+  instructions.className = 'instructions';
+  instructions.textContent = 'Shift or right click to change directions.';
+  player1Ui.appendChild(instructions);
+
   gameWrapper.appendChild(player1Ui);
 
   const player2Ui = buildPlayerUi(player2);
@@ -29,7 +35,10 @@ function buildControls() {
   startButton.className = 'start-button';
   startButton.textContent = 'Start';
   startButton.disabled = true;
-  startButton.onclick = startGame;
+  startButton.onclick = () => {
+    startGame();
+    startButton.disabled = true;
+  };
   wrapper.appendChild(startButton);
 
   const resetButton = document.createElement('button');
@@ -87,6 +96,6 @@ export const displayWinner = (loser: Player, winner: Player) => {
   const loserUi = document.querySelector(`.game-ui.${loser.name}`);
   const winnerUi = document.querySelector(`.game-ui.${winner.name}`);
 
-  loserUi!.firstChild!.textContent = loser.name + ' Loser';
-  winnerUi!.firstChild!.textContent = winner.name + ' Winner';
+  loserUi!.firstChild!.textContent = loser.name + ' Loses...';
+  winnerUi!.firstChild!.textContent = winner.name + ' Wins!';
 };
